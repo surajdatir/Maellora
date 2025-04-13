@@ -972,10 +972,11 @@
             40% { transform: translateY(-20px) translateX(-50%); }
             60% { transform: translateY(-10px) translateX(-50%); }
         }
+
 /* Crypto Ticker Styles */
 .crypto-ticker {
     position: fixed;
-    top: 80px; /* हेडर की height के अनुसार एडजस्ट करें */
+    top: 80px;
     left: 0;
     right: 0;
     background: rgba(10, 10, 10, 0.5);
@@ -988,9 +989,9 @@
 
 .ticker-container {
     display: flex;
-    animation: ticker-scroll 40s linear infinite;
+    animation: ticker-scroll 80s linear infinite;
     padding: 5.7px 0;
-    min-width: 100%
+    min-width: max-content; /* Changed from 100% */
 }
 
 .ticker-item {
@@ -1003,6 +1004,7 @@
     border-radius: 8px;
     border: 1px solid var(--glass-border);
     transition: all 0.3s ease;
+    flex-shrink: 0; /* Added to prevent shrinking */
 }
 
 .ticker-item img {
@@ -1043,8 +1045,8 @@
 }
 
 @keyframes ticker-scroll {
-    0% { transform: translateX(100%); }
-    50% { transform: translateX(-100%); }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-100% - 100vw)); } /* Updated calculation */
 }
 
 /* Mobile Responsive */
@@ -1625,24 +1627,50 @@ async function fetchCryptoPrices() {
         data.forEach(coin => {
             const priceElements = document.querySelectorAll(`[data-coin="${coin.id}"]`);
             priceElements.forEach(element => {
-                // प्राइस अपडेट
                 element.textContent = `$${coin.current_price.toLocaleString(undefined, {maximumFractionDigits: 2})}`;
                 
-                // 24h Change
                 const changeElement = element.nextElementSibling;
                 const change = coin.price_change_percentage_24h;
                 changeElement.textContent = `${change.toFixed(2)}%`;
                 changeElement.className = change >= 0 ? 'positive' : 'negative';
             });
         });
+        
+        // Initialize ticker after first load
+        if(!window.tickerInitialized) {
+            setupInfiniteTicker();
+            window.tickerInitialized = true;
+        }
     } catch (error) {
         console.error('Error fetching crypto prices:', error);
     }
 }
 
+function setupInfiniteTicker() {
+    const ticker = document.querySelector('.ticker-container');
+    const items = document.querySelectorAll('.ticker-item');
+    
+    // Clear existing items
+    ticker.innerHTML = '';
+    
+    // Add duplicates for seamless looping
+    items.forEach(item => ticker.appendChild(item.cloneNode(true)));
+    items.forEach(item => ticker.appendChild(item.cloneNode(true)));
+    items.forEach(item => ticker.appendChild(item.cloneNode(true)));
+}
+
 // Initialize and update every 60 seconds
 fetchCryptoPrices();
 setInterval(fetchCryptoPrices, 60000);
+
+// Reset animation on resize
+window.addEventListener('resize', () => {
+    const ticker = document.querySelector('.ticker-container');
+    ticker.style.animation = 'none';
+    setTimeout(() => {
+        ticker.style.animation = 'ticker-scroll 80s linear infinite';
+    }, 100);
+});
     </script>
 </body>
 </html>
