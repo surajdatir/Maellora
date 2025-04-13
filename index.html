@@ -8,96 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-/* Updated Submenu Styles */
-    .has-submenu {
-        position: relative;
-        margin: 15px 0; /* Same as other menu items */
-    }
-    
-    .submenu-toggle {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        color: var(--light);
-        text-decoration: none;
-        font-size: 1.5rem; /* Same as main menu */
-        font-weight: 300;
-        padding: 10px 0; /* Same as main menu */
-        position: relative;
-        transition: all 0.3s ease;
-        opacity: 1;
-        transform: translateX(0);
-    }
-    
-    .submenu {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
-        padding-left: 25px; /* Nice indentation */
-    }
-    
-    .submenu.active {
-        max-height: 400px; /* Enough space for all items */
-    }
-    
-    .submenu a {
-        display: block;
-        font-size: 1.7rem; /* Slightly smaller than main menu */
-        font-weight: 300;
-        margin: 12px 0; /* Proper spacing between items */
-        padding: 8px 0; /* Comfortable tap targets */
-        position: relative;
-        transition: all 0.4s ease;
-        opacity: 0;
-        transform: translateX(20px);
-        color: rgba(255,255,255,0.9);
-    }
-    
-    .submenu.active a {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    
-    .submenu a:after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 0;
-        height: 1px;
-        background: linear-gradient(90deg, var(--primary), var(--secondary));
-        transition: width 0.3s ease;
-    }
-    
-    .submenu a:hover:after {
-        width: 100%;
-    }
-    
-    .submenu-toggle i {
-        transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
-        margin-left: 10px;
-        font-size: 1.4rem;
-    }
-    
-    .submenu-toggle.active i {
-        transform: rotate(180deg);
-    }
-    
-    /* Make sure main menu items and submenu items align properly */
-    .nav-links a,
-    .submenu-toggle {
-        --i: 0; /* For consistent animation delays */
-        opacity: 0;
-        transform: translateX(30px);
-    }
-    
-    .nav-links.active a,
-    .nav-links.active .submenu-toggle {
-        opacity: 1;
-        transform: translateX(0);
-        transition: all 0.4s ease calc(0.1s * var(--i));
-    }
 .contact-form .btn {
     background: #0066ff;
 }
@@ -1062,88 +972,107 @@
             40% { transform: translateY(-20px) translateX(-50%); }
             60% { transform: translateY(-10px) translateX(-50%); }
         }
-/* CSS for Crypto Ticker */
+/* Crypto Ticker Styles */
 .crypto-ticker {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--glass-border);
-    border-radius: 8px;
-    margin: 2rem 0;
-    overflow: hidden;
-    position: relative;
+    position: fixed;
+    top: 80px; /* हेडर की height के अनुसार एडजस्ट करें */
+    left: 0;
+    right: 0;
+    background: rgba(10, 10, 10, 0.5);
     backdrop-filter: blur(10px);
+    z-index: 998;
+    border-bottom: 1px solid var(--glass-border);
+    height: 50px;
+    overflow: hidden;
 }
 
-.ticker-track {
+.ticker-container {
     display: flex;
-    padding: 1rem 0;
     animation: ticker-scroll 40s linear infinite;
+    padding: 5.7px 0;
+    min-width: 100%
 }
 
 .ticker-item {
     display: flex;
     align-items: center;
-    margin: 0 2rem;
-    padding: 0.8rem 1.5rem;
+    margin: 0 30px;
+    white-space: nowrap;
+    padding: 5px 15px;
     background: rgba(255,255,255,0.05);
     border-radius: 8px;
+    border: 1px solid var(--glass-border);
     transition: all 0.3s ease;
-    min-width: 280px;
 }
 
-.ticker-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,102,255,0.2);
+.ticker-item img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
 }
 
-.coin-logo {
-    width: 28px;
-    height: 28px;
-    margin-right: 12px;
-    border-radius: 50%;
-}
-
-.price-change {
-    margin-left: 15px;
+.crypto-name {
     font-weight: 600;
+    margin-right: 8px;
+    color: var(--primary);
     font-size: 0.9em;
 }
 
-.price-up { color: #00ffaa; }
-.price-down { color: #ff006a; }
-
-@keyframes ticker-scroll {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-230%); }
-}
-.ticker-item {
-    min-width: 320px; /* थोड़ा चौड़ा करें */
-    padding: 1rem 1.5rem;
-}
-
-.coin-logo {
-    width: 32px;
-    height: 32px;
+.crypto-price {
     margin-right: 15px;
-    border-radius: 50%;
-    background: white;
-    padding: 2px;
+    font-weight: 500;
+    font-size: 0.9em;
+    color: #fff;
 }
 
-.coin-info {
-    display: flex;
-    flex-direction: column;
-    margin-right: 15px;
-}
-
-.coin-name {
-    font-size: 1.1rem;
+.crypto-change {
+    font-size: 0.85em;
+    padding: 3px 8px;
+    border-radius: 5px;
     font-weight: 600;
 }
 
-.coin-price {
-    font-size: 0.95rem;
-    opacity: 0.9;
+.positive {
+    color: #00ff00 !important;
+    background: rgba(0, 255, 0, 0.1);
 }
+
+.negative {
+    color: #ff4444 !important;
+    background: rgba(255, 0, 0, 0.1);
+}
+
+@keyframes ticker-scroll {
+    0% { transform: translateX(100%); }
+    50% { transform: translateX(-100%); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 1768px) {
+    .crypto-ticker {
+        top: 80px;
+        height: 50px;
+    }
+    
+    .ticker-item {
+        margin: 0 15px;
+        padding: 6px 10px;
+    }
+    
+    .ticker-item img {
+        width: 25px;
+        height: 25px;
+    }
+    
+    .crypto-name, .crypto-price {
+        font-size: 0.9em;
+    }
+    
+    .crypto-change {
+        font-size: 0.75em;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -1165,42 +1094,93 @@
             <div class="menu-line"></div>
             <div class="menu-line"></div>
         </div>
-        <div class="brand">Maéllora<span class="btc-icon">₿</span></div>
-       <div class="nav-links" id="navLinks">
-    <a href="#home" style="--i: 0">Home</a>
-    <div class="has-submenu" style="--i: 1">
-        <div class="submenu-toggle" id="aboutToggle">
-            <span>About</span>
-            <i class="fas fa-chevron-down"></i>
+        <div class="brand">Maéllora</div>
+        <div class="nav-links" id="navLinks">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#vision">Vision</a>
+            <a href="#community">Community</a>
+            <a href="#contact">Contact</a>
+            <a href="#" id="loginBtn">Login</a>
         </div>
-        <div class="submenu" id="aboutSubmenu">
-            <a href="#about" target="_blank" style="--i: 1">Maéllora Techmed</a>
-            <a href="#about" target="_blank" style="--i: 2">Maéllora Finance</a>
-            <a href="#about" target="_blank" style="--i: 3">Maéllora Exchange</a>
-        </div>
-    </div>
-    <a href="#vision" style="--i: 2">Vision</a>
-    <a href="#community" style="--i: 3">Community</a>
-    <a href="#contact" style="--i: 4">Contact</a>
-    <a href="#" id="loginBtn" style="--i: 5">Login</a>
-</div>
-
     </header>
 
     <!-- Main Content -->
     <div class="main-content">
         <!-- Hero Section -->
         <section class="hero" id="home">
-            <h1> Powered by innovation, driven by blockchain</h1>
+            <h1> <br>Powered by innovation, driven by blockchain</h1>
             <p>"Maéllora is a premium innovation brand blending technology, elegance, and futuristic solutions across industries."</p>
-<!-- Crypto Price Ticker Section -->
+
+<!-- Header के बाद यह कोड जोड़ें -->
 <div class="crypto-ticker">
     <div class="ticker-container">
-        <div class="ticker-track">
-            <!-- Dynamic content from JavaScript -->
+        <!-- Bitcoin -->
+        <div class="ticker-item">
+            <img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.0/svg/color/btc.svg" alt="BTC">
+            <span class="crypto-name">BTC</span>
+            <span class="crypto-price" data-coin="bitcoin">-</span>
+            <span class="crypto-change"></span>
+        </div>
+        
+        <!-- Ethereum -->
+        <div class="ticker-item">
+            <img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.0/svg/color/eth.svg" alt="ETH">
+            <span class="crypto-name">ETH</span>
+            <span class="crypto-price" data-coin="ethereum">-</span>
+            <span class="crypto-change"></span>
+        </div>
+
+        <!-- Binance Coin -->
+        <div class="ticker-item">
+            <img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.0/svg/color/bnb.svg" alt="BNB">
+            <span class="crypto-name">BNB</span>
+            <span class="crypto-price" data-coin="binancecoin">-</span>
+            <span class="crypto-change"></span>
+        </div>
+
+        <!-- Solana -->
+        <div class="ticker-item">
+            <img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.0/svg/color/sol.svg" alt="SOL">
+            <span class="crypto-name">SOL</span>
+            <span class="crypto-price" data-coin="solana">-</span>
+            <span class="crypto-change"></span>
+        </div>
+
+        <!-- Bittensor -->
+        <div class="ticker-item">
+            <img src="https://assets.coingecko.com/coins/images/28452/large/TAO_Logo.png" alt="TAO" style="width:24px;height:24px;">
+            <span class="crypto-name">TAO</span>
+            <span class="crypto-price" data-coin="bittensor">-</span>
+            <span class="crypto-change"></span>
+        </div>
+
+        <!-- Litecoin -->
+        <div class="ticker-item">
+            <img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.0/svg/color/ltc.svg" alt="LTC">
+            <span class="crypto-name">LTC</span>
+            <span class="crypto-price" data-coin="litecoin">-</span>
+            <span class="crypto-change"></span>
+        </div>
+
+        <!-- Maker -->
+        <div class="ticker-item">
+            <img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.0/svg/color/mkr.svg" alt="MKR">
+            <span class="crypto-name">MKR</span>
+            <span class="crypto-price" data-coin="maker">-</span>
+            <span class="crypto-change"></span>
+        </div>
+
+        <!-- XRP -->
+        <div class="ticker-item">
+            <img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.0/svg/color/xrp.svg" alt="XRP">
+            <span class="crypto-name">XRP</span>
+            <span class="crypto-price" data-coin="ripple">-</span>
+            <span class="crypto-change"></span>
         </div>
     </div>
 </div>
+
             
             <div class="grid">
                 <div class="card">
@@ -1438,212 +1418,7 @@ All individual works are copyright protected by their respective owners & contri
 
     <!-- JavaScript -->
     <script>
-// अपडेटेड JavaScript
-async function fetchCryptoPrices() {
-    try {
-        const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,litecoin,bittensor&sparkline=false');
-        const data = await response.json();
-        
-        const ticker = document.getElementById('cryptoTicker');
-        ticker.innerHTML = '';
-        
-        const coins = [
-            { 
-                id: 'bitcoin',
-                logo: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png',
-                name: 'Bitcoin'
-            },
-            {
-                id: 'ethereum',
-                logo: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png',
-                name: 'Ethereum'
-            },
-            {
-                id: 'litecoin',
-                logo: 'https://assets.coingecko.com/coins/images/2/large/litecoin.png',
-                name: 'Litecoin'
-            },
-            {
-                id: 'bittensor',
-                logo: 'https://assets.coingecko.com/coins/images/28452/large/ARUPeD3o_400x400.jpeg',
-                name: 'Bittensor'
-            }
-        ];
 
-        coins.forEach(coinData => {
-            const coin = data.find(c => c.id === coinData.id);
-            if(!coin) return;
-
-            const tickerItem = document.createElement('div');
-            tickerItem.className = 'ticker-item';
-            
-            const priceChange = coin.price_change_percentage_24h.toFixed(2);
-            const isPositive = priceChange >= 0;
-            
-            tickerItem.innerHTML = `
-                <img src="${coinData.logo}" class="coin-logo" alt="${coinData.name}">
-                <div class="coin-info">
-                    <span class="coin-name">${coin.symbol.toUpperCase()}</span>
-                    <span class="coin-price">$${coin.current_price.toLocaleString()}</span>
-                </div>
-                <span class="price-change ${isPositive ? 'price-up' : 'price-down'}">
-                    ${isPositive ? '+' : ''}${priceChange}%
-                </span>
-            `;
-
-            // Smooth scroll के लिए clone बनाएं
-            ticker.appendChild(tickerItem.cloneNode(true));
-            ticker.appendChild(tickerItem.cloneNode(true));
-        });
-
-    } catch (error) {
-        console.error('Error:', error);
-        // Backup data show करें
-        showBackupData();
-    }
-}
-
-function showBackupData() {
-    const backupData = [
-        { symbol: 'BTC', price: '63,850', change: 2.4 },
-        { symbol: 'ETH', price: '3,250', change: -1.8 },
-        { symbol: 'LTC', price: '82.5', change: 0.6 },
-        { symbol: 'TAO', price: '450', change: 5.2 }
-    ];
-
-    const ticker = document.getElementById('cryptoTicker');
-    ticker.innerHTML = '';
-    
-    backupData.forEach(coin => {
-        const tickerItem = document.createElement('div');
-        tickerItem.className = `ticker-item ${coin.change >= 0 ? 'price-up' : 'price-down'}`;
-        tickerItem.innerHTML = `
-            <div class="coin-info">
-                <span class="coin-name">${coin.symbol}</span>
-                <span class="coin-price">$${coin.price}</span>
-            </div>
-            <span class="price-change">${coin.change >= 0 ? '+' : ''}${coin.change}%</span>
-        `;
-        ticker.appendChild(tickerItem.cloneNode(true));
-        ticker.appendChild(tickerItem.cloneNode(true));
-    });
-}
-
-// हर 30 सेकंड में अपडेट
-setInterval(fetchCryptoPrices, 30000);
-fetchCryptoPrices();
-// Backup Data
-const backupData = [
-    { symbol: 'BTC', price: '42000', change: 2.4 },
-    { symbol: 'ETH', price: '2500', change: -1.8 }
-];
-async function fetchCryptoPrices() {
-    try {
-        const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum');
-        const data = await response.json();
-        
-        const tickerTrack = document.querySelector('.ticker-track');
-        tickerTrack.innerHTML = '';
-        
-        data.forEach(coin => {
-            const tickerItem = document.createElement('div');
-            tickerItem.className = `ticker-item ${coin.price_change_percentage_24h >= 0 ? 'price-up' : 'price-down'}`;
-            tickerItem.innerHTML = `
-                <img src="${coin.image}" alt="${coin.name}" width="24">
-                <span class="coin-name">${coin.symbol.toUpperCase()}</span>
-                <span class="price">$${coin.current_price.toLocaleString()}</span>
-                <span class="change">${coin.price_change_percentage_24h.toFixed(2)}%</span>
-            `;
-            
-            tickerTrack.appendChild(tickerItem.cloneNode(true));
-            tickerTrack.appendChild(tickerItem.cloneNode(true));
-        });
-        
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-}
-
-// Refresh every 30 seconds
-setInterval(fetchCryptoPrices, 30000);
-fetchCryptoPrices();
-// Create ticker items
-const coins = [
-    { id: 'bitcoin', name: 'BTC', logo: 'btc-logo.png' },
-    { id: 'ethereum', name: 'ETH', logo: 'eth-logo.png' },
-    // Add more coins
-];
-
-function updateTicker() {
-    const tickerTrack = document.querySelector('.ticker-track');
-    tickerTrack.innerHTML = '';
-
-    coins.forEach(coin => {
-        const randomPrice = (Math.random() * 10000).toFixed(2);
-        const change = (Math.random() * 10 - 5).toFixed(2);
-        
-        const tickerItem = document.createElement('div');
-        tickerItem.className = `ticker-item ${change >= 0 ? 'price-up' : 'price-down'}`;
-        tickerItem.innerHTML = `
-            <img src="assets/${coin.logo}" alt="${coin.name}" width="24">
-            <span class="coin-name">${coin.name}</span>
-            <span class="price">$${randomPrice}</span>
-            <span class="change">${change}%</span>
-        `;
-        
-        tickerTrack.appendChild(tickerItem.cloneNode(true));
-        tickerTrack.appendChild(tickerItem.cloneNode(true)); // Double for smooth loop
-    });
-}
-
-// Update every 5 seconds
-setInterval(updateTicker, 5000);
-// Close mobile menu when navigating to subpages
-document.querySelectorAll('.submenu a').forEach(link => {
-    link.addEventListener('click', () => {
-        menuBtn.classList.remove('active');
-        navLinks.classList.remove('active');
-        aboutToggle.classList.remove('active');
-        aboutSubmenu.classList.remove('active');
-    });
-});
-// Add this to your existing JavaScript
-    const aboutToggle = document.getElementById('aboutToggle');
-    const aboutSubmenu = document.getElementById('aboutSubmenu');
-    
-    aboutToggle.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        aboutToggle.classList.toggle('active');
-        aboutSubmenu.classList.toggle('active');
-        
-        // Animate submenu items
-        const submenuItems = aboutSubmenu.querySelectorAll('a');
-        if (aboutSubmenu.classList.contains('active')) {
-            submenuItems.forEach((item, index) => {
-                item.style.transitionDelay = `${index * 0.1}s`;
-                item.style.opacity = '1';
-                item.style.transform = 'translateX(0)';
-            });
-        } else {
-            submenuItems.forEach(item => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateX(20px)';
-            });
-        }
-    });
-    
-    // Close submenu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.has-submenu')) {
-            aboutToggle.classList.remove('active');
-            aboutSubmenu.classList.remove('active');
-            aboutSubmenu.querySelectorAll('a').forEach(item => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateX(20px)';
-            });
-        }
-    });
         // DOM Elements
     const menuBtn = document.getElementById('menuBtn');
     const navLinks = document.getElementById('navLinks');
@@ -1828,6 +1603,46 @@ document.querySelectorAll('.submenu a').forEach(link => {
             document.querySelector('.circle-2').style.transform = `translate(${x * -40}px, ${y * -40}px)`;
             document.querySelector('.circle-3').style.transform = `translate(${x * 20}px, ${y * -20}px)`;
         });
+// Crypto Price Ticker Functionality
+const cryptoList = [
+    'bitcoin', 
+    'ethereum',
+    'binancecoin',
+    'solana',
+    'bittensor',
+    'litecoin',
+    'maker',
+    'ripple'
+];
+
+const API_URL = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=';
+
+async function fetchCryptoPrices() {
+    try {
+        const response = await fetch(`${API_URL}${cryptoList.join(',')}`);
+        const data = await response.json();
+        
+        data.forEach(coin => {
+            const priceElements = document.querySelectorAll(`[data-coin="${coin.id}"]`);
+            priceElements.forEach(element => {
+                // प्राइस अपडेट
+                element.textContent = `$${coin.current_price.toLocaleString(undefined, {maximumFractionDigits: 2})}`;
+                
+                // 24h Change
+                const changeElement = element.nextElementSibling;
+                const change = coin.price_change_percentage_24h;
+                changeElement.textContent = `${change.toFixed(2)}%`;
+                changeElement.className = change >= 0 ? 'positive' : 'negative';
+            });
+        });
+    } catch (error) {
+        console.error('Error fetching crypto prices:', error);
+    }
+}
+
+// Initialize and update every 60 seconds
+fetchCryptoPrices();
+setInterval(fetchCryptoPrices, 60000);
     </script>
 </body>
 </html>
