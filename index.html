@@ -985,6 +985,7 @@
     border-bottom: 1px solid var(--glass-border);
     height: 50px;
     overflow: hidden;
+    will-change: transform;
 }
 
 .ticker-container {
@@ -994,6 +995,8 @@
     animation: ticker-scroll 120s linear infinite;
     padding: 5.7px 0;
     will-change: transform;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
 }
 
 .ticker-item {
@@ -1007,7 +1010,9 @@
     border: 1px solid var(--glass-border);
     transition: all 0.3s ease;
     flex-shrink: 0;
+    backface-visibility: hidden;
 }
+
 
 .ticker-item img {
     width: 24px;
@@ -1047,8 +1052,8 @@
 }
 
 @keyframes ticker-scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-50%, 0, 0); }
 }
 
 /* Mobile Responsive */
@@ -1621,6 +1626,23 @@ const cryptoList = [
 
 const API_URL = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=';
 
+// Request animation frame polyfill
+const requestAnimationFrame = window.requestAnimationFrame || 
+                            window.mozRequestAnimationFrame || 
+                            window.webkitRequestAnimationFrame || 
+                            window.msRequestAnimationFrame;
+
+let lastTime = 0;
+function stableAnimationFrame(callback) {
+    const currTime = new Date().getTime();
+    const timeToCall = Math.max(0, 16 - (currTime - lastTime));
+    const id = window.setTimeout(() => {
+        callback(currTime + timeToCall);
+    }, timeToCall);
+    lastTime = currTime + timeToCall;
+    return id;
+}
+
 async function fetchCryptoPrices() {
     try {
         const response = await fetch(`${API_URL}${cryptoList.join(',')}`);
@@ -1661,30 +1683,49 @@ function setupInfiniteTicker() {
         });
     }
     
-    // Calculate proper animation duration based on content width
-    const tickerWidth = ticker.scrollWidth / 3; // Original content width
+    // Force hardware acceleration
+    ticker.style.transform = 'translate3d(0, 0, 0)';
+    
+    // Start animation
+    startTickerAnimation();
+}
+
+function startTickerAnimation() {
+    const ticker = document.querySelector('.ticker-container');
+    if (!ticker) return;
+    
+    const tickerWidth = ticker.scrollWidth / 3;
     const viewportWidth = window.innerWidth;
     const speed = 100; // pixels per second
     const duration = (tickerWidth + viewportWidth) / speed;
     
-    // Apply calculated duration
-    ticker.style.animationDuration = `${duration}s`;
+    ticker.style.animation = `ticker-scroll ${duration}s linear infinite`;
 }
 
-// Initialize and update every 60 seconds
+// Initialize with requestAnimationFrame for smooth start
 window.addEventListener('load', () => {
-    fetchCryptoPrices();
-    setInterval(fetchCryptoPrices, 60000);
+    requestAnimationFrame(() => {
+        fetchCryptoPrices();
+        setInterval(fetchCryptoPrices, 60000);
+    });
 });
 
-// Handle window resize properly
+// Handle visibility changes
+document.addEventListener('visibilitychange', () => {
+    const ticker = document.querySelector('.ticker-container');
+    if (document.visibilityState === 'visible') {
+        startTickerAnimation();
+    }
+});
+
+// Handle window resize
 window.addEventListener('resize', () => {
     const ticker = document.querySelector('.ticker-container');
     if (ticker) {
         ticker.style.animation = 'none';
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             setupInfiniteTicker();
-        }, 100);
+        });
     }
 });
     </script>
