@@ -989,9 +989,11 @@
 
 .ticker-container {
     display: flex;
-    animation: ticker-scroll 80s linear infinite;
+    position: absolute;
+    left: 0;
+    animation: ticker-scroll 120s linear infinite;
     padding: 5.7px 0;
-    min-width: max-content; /* Changed from 100% */
+    will-change: transform;
 }
 
 .ticker-item {
@@ -1004,7 +1006,7 @@
     border-radius: 8px;
     border: 1px solid var(--glass-border);
     transition: all 0.3s ease;
-    flex-shrink: 0; /* Added to prevent shrinking */
+    flex-shrink: 0;
 }
 
 .ticker-item img {
@@ -1046,7 +1048,7 @@
 
 @keyframes ticker-scroll {
     0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-100% - 100vw)); } /* Updated calculation */
+    100% { transform: translateX(-50%); }
 }
 
 /* Mobile Responsive */
@@ -1636,8 +1638,7 @@ async function fetchCryptoPrices() {
             });
         });
         
-        // Initialize ticker after first load
-        if(!window.tickerInitialized) {
+        if (!window.tickerInitialized) {
             setupInfiniteTicker();
             window.tickerInitialized = true;
         }
@@ -1653,23 +1654,38 @@ function setupInfiniteTicker() {
     // Clear existing items
     ticker.innerHTML = '';
     
-    // Add duplicates for seamless looping
-    items.forEach(item => ticker.appendChild(item.cloneNode(true)));
-    items.forEach(item => ticker.appendChild(item.cloneNode(true)));
-    items.forEach(item => ticker.appendChild(item.cloneNode(true)));
+    // Add duplicates for seamless looping (3 sets)
+    for (let i = 0; i < 3; i++) {
+        items.forEach(item => {
+            ticker.appendChild(item.cloneNode(true));
+        });
+    }
+    
+    // Calculate proper animation duration based on content width
+    const tickerWidth = ticker.scrollWidth / 3; // Original content width
+    const viewportWidth = window.innerWidth;
+    const speed = 100; // pixels per second
+    const duration = (tickerWidth + viewportWidth) / speed;
+    
+    // Apply calculated duration
+    ticker.style.animationDuration = `${duration}s`;
 }
 
 // Initialize and update every 60 seconds
-fetchCryptoPrices();
-setInterval(fetchCryptoPrices, 60000);
+window.addEventListener('load', () => {
+    fetchCryptoPrices();
+    setInterval(fetchCryptoPrices, 60000);
+});
 
-// Reset animation on resize
+// Handle window resize properly
 window.addEventListener('resize', () => {
     const ticker = document.querySelector('.ticker-container');
-    ticker.style.animation = 'none';
-    setTimeout(() => {
-        ticker.style.animation = 'ticker-scroll 80s linear infinite';
-    }, 100);
+    if (ticker) {
+        ticker.style.animation = 'none';
+        setTimeout(() => {
+            setupInfiniteTicker();
+        }, 100);
+    }
 });
     </script>
 </body>
